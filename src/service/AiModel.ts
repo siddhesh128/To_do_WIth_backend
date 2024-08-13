@@ -37,4 +37,3 @@ import {
     // See https://ai.google.dev/gemini-api/docs/safety-settings
     history: [],
   });
-  
