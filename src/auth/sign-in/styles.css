@@ -1,0 +1,13 @@
+.sign-in-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    max-width: 400px; /* Limit the width of the sign-in form */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Padding around the sign-in form */
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
