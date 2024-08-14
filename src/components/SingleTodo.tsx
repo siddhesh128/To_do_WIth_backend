@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
-import { Todo } from "../model.ts";
+import { Todo } from "../model";
 import { Draggable } from "react-beautiful-dnd";
+import axios from "axios";
 
 const SingleTodo: React.FC<{
   index: number;
@@ -19,22 +19,27 @@ const SingleTodo: React.FC<{
     inputRef.current?.focus();
   }, [edit]);
 
-  const handleEdit = (e: React.FormEvent, id: number) => {
+  const handleEdit = (e: React.FormEvent) => {
     e.preventDefault();
     setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+      todos.map((t) => (t.id === todo.id ? { ...t, todo: editTodo } : t))
     );
     setEdit(false);
   };
 
-  const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/delete-task/${todo.id}`);
+      setTodos(todos.filter((t) => t.id !== todo.id));
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
   };
 
-  const handleDone = (id: number) => {
+  const handleDone = () => {
     setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+      todos.map((t) =>
+        t.id === todo.id ? { ...t, isDone: !t.isDone } : t
       )
     );
   };
@@ -43,7 +48,7 @@ const SingleTodo: React.FC<{
     <Draggable draggableId={todo.id.toString()} index={index}>
       {(provided, snapshot) => (
         <form
-          onSubmit={(e) => handleEdit(e, todo.id)}
+          onSubmit={handleEdit}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
@@ -72,10 +77,10 @@ const SingleTodo: React.FC<{
             >
               <AiFillEdit />
             </span>
-            <span className="icon" onClick={() => handleDelete(todo.id)}>
+            <span className="icon" onClick={handleDelete}>
               <AiFillDelete />
             </span>
-            <span className="icon" onClick={() => handleDone(todo.id)}>
+            <span className="icon" onClick={handleDone}>
               <MdDone />
             </span>
           </div>
